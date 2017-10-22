@@ -1,0 +1,9 @@
+www：src内のejsとassetはきだし
+EJS:index.ejsなど(_をつけると吐き出されない)
+asset:sass,js,imageフォルダ
+
+src:元データ保管フォルダ
+
+「gulp build」：全体エクスポート
+
+*ソースマップ機能追加

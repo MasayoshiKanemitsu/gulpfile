@@ -1,0 +1,98 @@
+//Loading plugin
+var gulp = require("gulp");
+var sass = require("gulp-sass");    //for sass compiler
+var uglify = require("gulp-uglify");// for javascript compresser
+var imagemin = require('gulp-imagemin'); // for image compresser
+
+var plumber = require('gulp-plumber');
+var notify = require('gulp-notify');
+var autoprefixer = require('autoprefixer');
+var browserSync  = require('browser-sync');
+var reload        = browserSync.reload;
+var ejs = require("gulp-ejs");
+var sourcemaps = require("gulp-sourcemaps");
+
+var postcss = require('gulp-postcss');
+//var cssnext = require('postcss-cssnext');
+//var mqpacker = require('css-mqpacker');
+//var flexibility  = require('postcss-flexibility');
+
+//Pass
+var cssPas = "www/inc/css/";
+var jsPas = "www/inc/js/";
+var imgPas = "www/inc/image/";
+var source = ["www/**/*"];
+
+
+//EJS
+gulp.task('ejs', function () {
+	return gulp.src(["src/ejs/**/*.ejs","!src/ejs/**/_*.ejs"])
+        .pipe(plumber({
+        errorHandler: function (error) {
+            console.log(error.message);
+            this.emit('end');
+        }}))
+        .pipe(ejs())
+        .pipe(gulp.dest("www/"))
+        .pipe(notify('EJS => HTML'))
+        .pipe(browserSync.reload({stream:true}));
+});
+
+//Sass
+gulp.task("sass", function(){
+    var processors = [
+    autoprefixer()
+  ];
+    gulp.src("src/asset/sass/**/*.scss")
+    .pipe(plumber({
+        errorHandler: notify.onError("Error: <%= error.message %>")
+    }))
+    .pipe(sourcemaps.init())//ソースマップ初期化
+    .pipe(sass({outputStyle: 'expanded'}))  //Output style
+    .pipe(postcss(processors))
+    .pipe(sourcemaps.write("./"))//CSSと同階層に作成
+    .pipe(gulp.dest(cssPas))
+    .pipe(notify('Sass => CSS'));
+});
+
+//Javascript
+gulp.task("uglify", function() {
+    gulp.src(["src/asset/js/**/*.js"])
+        .pipe(plumber())
+        .pipe(uglify())
+        .pipe(gulp.dest(jsPas))
+        .pipe(notify('uglify has done!!'));
+});
+
+//Image
+gulp.task("imagemin", function() {
+    gulp.src("src/asset/image/**/*")
+        .pipe(imagemin())
+        .pipe(gulp.dest(imgPas))
+        .pipe(notify('Image Compressed!!'));
+});
+
+//Browser reload
+gulp.task('reload',function(){
+    browserSync.reload();
+});
+
+//server
+gulp.task('server', function () {
+    browserSync({
+        notify: true,
+        server: {
+            baseDir: "www"
+        }
+    });
+    gulp.watch('src/asset/sass/**/*.scss', ['sass']);
+    gulp.watch('src/asset/js/**/*.js', ['uglify']);
+    gulp.watch("src/asset/image/**/*", ['imagemin']);
+    gulp.watch("src/ejs/**/*.ejs", ['ejs']);
+    gulp.watch(source, reload);
+});
+
+gulp.task("default", ["server"]);
+
+//全体エクスポート用コマンド
+gulp.task("build",["sass","uglify","imagemin","reload","ejs"]);
