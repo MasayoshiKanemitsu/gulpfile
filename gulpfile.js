@@ -107,8 +107,6 @@ gulp.task('server', function () {
 gulp.task("default", ["server"]);
 
 //全体エクスポート用コマンド
-//gulp.task("build",["sass","concat","uglify","imagemin","reload","ejs"]);
-
 gulp.task("build", function(callback) {
 	return runSequence(
 		"concat",
