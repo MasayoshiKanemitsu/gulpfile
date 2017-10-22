@@ -1,9 +1,15 @@
-www：src内のejsとassetはきだし
-EJS:index.ejsなど(_をつけると吐き出されない)
-asset:sass,js,imageフォルダ
+Gulpメモ
 
-src:元データ保管フォルダ
+src：元データ保管フォルダ
+www：src内のejsとassetをはきだし
+EJS：index.ejsなど(_をつけると吐き出されない)
+asset：sass,js,imageフォルダ
+======================jsフォルダ構成======================
 
-「gulp build」：全体エクスポート
+lib：ライブラリ関係
+parts：作成JSファイル配置場所
+script.js：partsの中身をconcatで全て結合したもの
 
-*ソースマップ機能追加
+========================================================
+
+＊「gulp build」：全体エクスポート
