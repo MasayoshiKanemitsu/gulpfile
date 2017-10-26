@@ -97,8 +97,8 @@ gulp.task('server', function () {
 		}
 	});
 	gulp.watch('src/asset/sass/**/*.scss', ['sass']);
-	gulp.watch("src/asset/js/**/*.js", ['concat']);
-	gulp.watch("src/asset/js/**/*.js",['uglify']);
+	gulp.watch("src/asset/js/parts/*.js", ['concat']);
+	gulp.watch(["src/asset/js/**/*.js","!src/asset/js/parts/*.js"],['uglify']);
 	gulp.watch("src/asset/image/**/*", ['imagemin']);
 	gulp.watch("src/ejs/**/*.ejs", ['ejs']);
 	gulp.watch(source, reload);
