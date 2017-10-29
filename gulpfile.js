@@ -3,13 +3,17 @@ var gulp = require("gulp");
 var sass = require("gulp-sass");	//for sass compiler
 var uglify = require("gulp-uglify");// for javascript compresser
 var imagemin = require('gulp-imagemin'); // for image compresser
-
 var plumber = require('gulp-plumber');
 var notify = require('gulp-notify');
 var autoprefixer = require('autoprefixer');
 var browserSync  = require('browser-sync');
 var reload = browserSync.reload;
-var ejs = require("gulp-ejs");
+
+//template engine
+var twig = require('gulp-twig');
+//var ejs = require("gulp-ejs");
+//
+
 var sourcemaps = require("gulp-sourcemaps");
 var concat = require("gulp-concat");
 var runSequence = require('run-sequence');//タスクの順番指定
@@ -27,18 +31,33 @@ var source = ["www/**/*"];
 
 
 //EJS
-gulp.task('ejs', function () {
-	return gulp.src(["src/ejs/**/*.ejs","!src/ejs/**/_*.ejs"])
+//gulp.task('ejs', function () {
+//	return gulp.src(["src/ejs/**/*.ejs","!src/ejs/**/_*.ejs"])
+//		.pipe(plumber({
+//		errorHandler: function (error) {
+//			console.log(error.message);
+//			this.emit('end');
+//		}}))
+//		.pipe(ejs())
+//		.pipe(gulp.dest("www/"))
+//		.pipe(notify('EJS => HTML'))
+//		.pipe(browserSync.reload({stream:true}));
+//});
+
+//twig
+gulp.task('twig', function () {
+	return gulp.src(["src/twig/page/**/*.twig","!src/twig/**/_*.twig"])
 		.pipe(plumber({
 		errorHandler: function (error) {
 			console.log(error.message);
 			this.emit('end');
 		}}))
-		.pipe(ejs())
+		.pipe(twig())
 		.pipe(gulp.dest("www/"))
-		.pipe(notify('EJS => HTML'))
+		.pipe(notify('TWIG => HTML'))
 		.pipe(browserSync.reload({stream:true}));
 });
+
 
 //Sass
 gulp.task("sass", function(){
@@ -100,7 +119,7 @@ gulp.task('server', function () {
 	gulp.watch("src/asset/js/parts/*.js", ['concat']);
 	gulp.watch(["src/asset/js/**/*.js","!src/asset/js/parts/*.js"],['uglify']);
 	gulp.watch("src/asset/image/**/*", ['imagemin']);
-	gulp.watch("src/ejs/**/*.ejs", ['ejs']);
+	gulp.watch("src/twig/**/*.twig", ['twig']);
 	gulp.watch(source, reload);
 });
 
@@ -111,7 +130,7 @@ gulp.task("build", function(callback) {
 	return runSequence(
 		"concat",
 		"uglify",
-		["sass", "imagemin", "ejs"],//並行処理
+		["sass", "imagemin", "twig"],//並行処理
 		"reload",
 		callback
 	);

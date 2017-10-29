@@ -1,8 +1,8 @@
 Gulpメモ
 
 src：元データ保管フォルダ
-www：src内のejsとassetをはきだし
-EJS：index.ejsなど(_をつけると吐き出されない)
+www：src内のtwigとassetをはきだし
+Twig：index.twigなど(_をつけると吐き出されない)
 asset：sass,js,imageフォルダ
 ======================jsフォルダ構成======================
 
